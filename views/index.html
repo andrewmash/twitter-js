@@ -17,8 +17,26 @@
       {% for tweet in tweets %}
         <li><a href="/users/{{tweet.name}}">{{tweet.name}}</a><br>{{tweet.text}}</li>
       {% endfor %}
+
+      {% if showForm %}
+        <br>
+        <form action="/tweets" method="POST">
+          <label for="name_field">Name:</label>
+
+            <input name="name" type="text" id="name_field" value="{{name}}"/>
+
+          <label for="text_field">Text:</label>
+          <input name="text" type="text" id="text_field" style="width: 350px;" />
+
+          <input type="submit" value="Submit" />
+        </form>
+        <br>
+
+      {% endif %}
+
       
     </div>
   </div>
+
     
 {% endblock %}
