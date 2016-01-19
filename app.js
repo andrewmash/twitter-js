@@ -1,3 +1,4 @@
+//This is a super cool app
 var express = require ( 'express' );
 var app = express();
 
