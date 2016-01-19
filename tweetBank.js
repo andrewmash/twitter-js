@@ -1,9 +1,10 @@
 var _ = require('lodash');
 
 var data = [];
+var nextId = 0;
 
 function add (name, text) {
-	data.push({ name: name, text: text });
+	data.push({ name: name, text: text, id: nextId++});
 }
 
 function list () {
@@ -11,7 +12,7 @@ function list () {
 }
 
 function find (properties) {
-	return _.where(data, properties);
+	return _.filter(data, properties);
 }
 
 module.exports = { add: add, list: list, find: find };
