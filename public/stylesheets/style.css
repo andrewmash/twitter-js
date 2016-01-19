@@ -1,0 +1,85 @@
+
+Skip to content
+
+    All gists
+    GitHub
+
+    @andrewmash
+
+0
+0
+
+@nimitmaru nimitmaru/style.css secret
+Last active 16 days ago
+Code
+Revisions 3
+style.css
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+#wrap > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+#footer > .container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+.tweetbox {
+  padding: 7px;
+}
+
+.tweetbox img {
+  float: left;
+  height: 48px;
+  width: 48px;
+  content:url("http://lorempixel.com/48/48");
+}
+.content {
+  margin-left: 60px;
+}
+.content .by {
+  font-weight: bold;
+}
+@andrewmash
+Styling with Markdown is supported
+Write Preview
+
+Attach files by dragging & dropping or selecting them.
+
+    Status API Training Shop Blog About Pricing 
+
+    © 2016 GitHub, Inc. Terms Privacy Security Contact Help 
+
