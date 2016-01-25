@@ -65,7 +65,6 @@ code {
   float: left;
   height: 48px;
   width: 48px;
-  content:url("http://lorempixel.com/48/48");
 }
 .content {
   margin-left: 60px;

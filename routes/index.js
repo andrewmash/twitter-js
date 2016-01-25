@@ -15,30 +15,29 @@ module.exports = function (io) {
 
 	router.get('/', function (req, res) {
 		// Here's the new method for databases
-		// db.Tweet.findAll().then(function(tweets) {
-		// 	tweets = tweets.map(function(tweet) {
-		// 		return 
-		// 	});
-		// 	res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
-		// });
-	  var tweets = tweetBank.list();
-	  res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
-	  tweets.forEach(function(tweet) {
-	  });
+		db.Tweet.findAll({ include: [ db.User ] }).then(function(tweets){
+			res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
+		});
+	  // var tweets = tweetBank.list();
+	  // res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
+	  // tweets.forEach(function(tweet) {
+	  // });
 	});
 
 	router.get('/users/:name', function(request, response) {
-		var name = request.params.name;
-		User.findOne(name).then(function (user) {
-    		return user.getTweets();
-		})
-		.then(function (tweets) {
-    		response.render('index', JSON.stringify(tweets)); // another way of just logging the plain old values
-		});
 		// var name = request.params.name;
-		// var list = tweetBank.find( {name: name} );
-		// response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
+		// User.findOne(name).then(function (user) {
+  //   		return user.getTweets();
+		// })
+		// .then(function (tweets) {
+  //   		response.render('index', JSON.stringify(tweets)); // another way of just logging the plain old values
+		// });
+		var name = request.params.name;
+		var list = tweetBank.find( {name: name} );
+		response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
 	});
+
+
 
 	router.get('/tweets/:id', function(request, response) {
 		var id = request.params.id;
