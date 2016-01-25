@@ -26,10 +26,17 @@ module.exports = function (io) {
 
 	router.get('/users/:name', function(request, response) {
 		var name = request.params.name;
+		var imgSrc = "";
 		db.User.findOne({ where: {name: name} }).then(function (user) {
+			imgSrc = user.pictureUrl;
     		return user.getTweets();
 		})
 		.then(function (tweets) {
+			tweets.forEach(function(tweet) {
+				tweet.User = {};
+				tweet.User.pictureUrl = imgSrc;
+				tweet.User.name = name;
+			});
     		response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: tweets, showForm: true });
 		});
 		// var name = request.params.name;
