@@ -1,4 +1,5 @@
 var express = require('express');
+var db = require("../models/");
 var router = express.Router();
 // could use one line instead: var router = require('express').Router();
 var tweetBank = require('../tweetBank');
@@ -13,6 +14,13 @@ module.exports = function (io) {
 	router.use(bodyParser.json());
 
 	router.get('/', function (req, res) {
+		// Here's the new method for databases
+		// db.Tweet.findAll().then(function(tweets) {
+		// 	tweets = tweets.map(function(tweet) {
+		// 		return 
+		// 	});
+		// 	res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
+		// });
 	  var tweets = tweetBank.list();
 	  res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
 	  tweets.forEach(function(tweet) {
@@ -21,8 +29,15 @@ module.exports = function (io) {
 
 	router.get('/users/:name', function(request, response) {
 		var name = request.params.name;
-		var list = tweetBank.find( {name: name} );
-		response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
+		User.findOne(name).then(function (user) {
+    		return user.getTweets();
+		})
+		.then(function (tweets) {
+    		response.render('index', JSON.stringify(tweets)); // another way of just logging the plain old values
+		});
+		// var name = request.params.name;
+		// var list = tweetBank.find( {name: name} );
+		// response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
 	});
 
 	router.get('/tweets/:id', function(request, response) {
@@ -35,8 +50,9 @@ module.exports = function (io) {
 		var name = request.body.name;
 		var text = request.body.text;
 		tweetBank.add(name, text);
-		io.sockets.emit('new_tweet', { name: name, text: text, id: new Date().getTime() });
-		response.redirect('/');
+		var newTweet = tweetBank.find( {name: name} );
+		io.sockets.emit('new_tweet', { name: name, text: text });
+		response.redirect("/");
 	});
 
 	return router;
