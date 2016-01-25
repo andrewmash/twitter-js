@@ -1,5 +1,6 @@
 var express = require('express');
-var db = require("../models/");
+var Tweet = require("../models/index").Tweet;
+var User = require("../models/index").User;
 var router = express.Router();
 // could use one line instead: var router = require('express').Router();
 var tweetBank = require('../tweetBank');
@@ -14,14 +15,14 @@ module.exports = function (io) {
 	router.use(bodyParser.json());
 
 	router.get('/', function (req, res) {
-		db.Tweet.findAll({ include: [ db.User ] }).then(function(tweets){
+		Tweet.findAll({ include: [ User ] }).then(function(tweets){
 			res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
 		});
 	});
 
 	router.get('/users/:userId', function(request, response) {
 		var userId = request.params.userId;
-		db.Tweet.findAll({ where: {UserId: userId}, include: [db.User] }).then(function (tweets) {
+		Tweet.findAll({ where: {UserId: userId}, include: [User] }).then(function (tweets) {
     		response.render('index', { title: 'Twitter.js - Posts by '+tweets[0].User.name, tweets: tweets, showForm: true });
 		});
 	});
@@ -30,7 +31,7 @@ module.exports = function (io) {
 	router.get('/tweets/:id', function(request, response) {
 		var id = request.params.id;
 		console.log(id);
-		db.Tweet.findById(id, { include: [ db.User ] }).then(function (tweet) {
+		Tweet.findById(id, { include: [ User ] }).then(function (tweet) {
 			console.log(tweet);
     		response.render('index', { title: 'Twitter.js', tweets: [tweet], showForm: true });
 		});
@@ -39,9 +40,9 @@ module.exports = function (io) {
 	router.post('/tweets', function(request, response) {
 		var name = request.body.name;
 		var text = request.body.text;
-		db.User.findOrCreate({where: {name: name}, defaults: {pictureUrl: "http://previews.123rf.com/images/upthebanner/upthebanner1004/upthebanner100400080/6779506-photo-male-portrait-close-up-on-white-backdrop-Stock-Photo-man-face-bald.jpg"}})
+		User.findOrCreate({where: {name: name}, defaults: {pictureUrl: "http://previews.123rf.com/images/upthebanner/upthebanner1004/upthebanner100400080/6779506-photo-male-portrait-close-up-on-white-backdrop-Stock-Photo-man-face-bald.jpg"}})
 		.spread(function(user, created) {
-			return db.Tweet.build({UserId: user.id, tweet: text}).save();
+			return Tweet.build({UserId: user.id, tweet: text}).save();
 		})
 		.then(function(tweet) {
 			io.sockets.emit('new_tweet', [tweet]);
