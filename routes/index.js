@@ -26,11 +26,11 @@ module.exports = function (io) {
 
 	router.get('/users/:name', function(request, response) {
 		var name = request.params.name;
-		db.User.findOne({name:name}).then(function (user) {
+		db.User.findOne({ where: {name: name} }).then(function (user) {
     		return user.getTweets();
 		})
 		.then(function (tweets) {
-    		response.render('index', { title: 'Twitter.js', tweets: tweets, showForm: true });
+    		response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: tweets, showForm: true });
 		});
 		// var name = request.params.name;
 		// var list = tweetBank.find( {name: name} );
@@ -50,10 +50,14 @@ module.exports = function (io) {
 	router.post('/tweets', function(request, response) {
 		var name = request.body.name;
 		var text = request.body.text;
-		tweetBank.add(name, text);
-		var newTweet = tweetBank.find( {name: name} );
-		io.sockets.emit('new_tweet', { name: name, text: text });
-		response.redirect("/");
+		db.User.findOrCreate({where: {name: name}, defaults: {pictureUrl: "http://previews.123rf.com/images/upthebanner/upthebanner1004/upthebanner100400080/6779506-photo-male-portrait-close-up-on-white-backdrop-Stock-Photo-man-face-bald.jpg"}})
+		.spread(function(user, created) {
+			return db.Tweet.build({UserId: user.id, tweet: text}).save();
+		})
+		.then(function(tweet) {
+			io.sockets.emit('new_tweet', [tweet]);
+			response.redirect("/");
+		});
 	});
 
 	return router;
