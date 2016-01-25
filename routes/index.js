@@ -14,34 +14,16 @@ module.exports = function (io) {
 	router.use(bodyParser.json());
 
 	router.get('/', function (req, res) {
-		// Here's the new method for databases
 		db.Tweet.findAll({ include: [ db.User ] }).then(function(tweets){
 			res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
 		});
-	  // var tweets = tweetBank.list();
-	  // res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
-	  // tweets.forEach(function(tweet) {
-	  // });
 	});
 
-	router.get('/users/:name', function(request, response) {
-		var name = request.params.name;
-		var imgSrc = "";
-		db.User.findOne({ where: {name: name} }).then(function (user) {
-			imgSrc = user.pictureUrl;
-    		return user.getTweets();
-		})
-		.then(function (tweets) {
-			tweets.forEach(function(tweet) {
-				tweet.User = {};
-				tweet.User.pictureUrl = imgSrc;
-				tweet.User.name = name;
-			});
-    		response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: tweets, showForm: true });
+	router.get('/users/:userId', function(request, response) {
+		var userId = request.params.userId;
+		db.Tweet.findAll({ where: {UserId: userId}, include: [db.User] }).then(function (tweets) {
+    		response.render('index', { title: 'Twitter.js - Posts by '+tweets[0].User.name, tweets: tweets, showForm: true });
 		});
-		// var name = request.params.name;
-		// var list = tweetBank.find( {name: name} );
-		// response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
 	});
 
 

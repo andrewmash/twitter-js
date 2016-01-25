@@ -15,7 +15,7 @@
     
       <!-- display tweets here -->
       {% for tweet in tweets %}
-        <div class="tweetbox"><img src="{{tweet.User.pictureUrl}}"><a href="/users/{{tweet.User.name}}">{{tweet.User.name}}</a><br>{{tweet.tweet}}</div>
+        <div class="tweetbox"><img src="{{tweet.User.pictureUrl}}"><a href="/users/{{tweet.User.id}}">{{tweet.User.name}}</a><br>{{tweet.tweet}}</div>
       {% endfor %}
 
       {% if showForm %}
