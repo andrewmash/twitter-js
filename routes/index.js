@@ -30,7 +30,7 @@ module.exports = function (io) {
     		return user.getTweets();
 		})
 		.then(function (tweets) {
-    		response.render('index', { title: 'Twitter.js', tweets: tweets, showForm: true }); // another way of just logging the plain old values
+    		response.render('index', { title: 'Twitter.js', tweets: tweets, showForm: true });
 		});
 		// var name = request.params.name;
 		// var list = tweetBank.find( {name: name} );
@@ -40,8 +40,11 @@ module.exports = function (io) {
 
 	router.get('/tweets/:id', function(request, response) {
 		var id = request.params.id;
-		var list = tweetBank.find( {id: +id} );
-		response.render('index', { title: 'Twitter.js - Post ID '+id, tweets: list } );
+		console.log(id);
+		db.Tweet.findById(id, { include: [ db.User ] }).then(function (tweet) {
+			console.log(tweet);
+    		response.render('index', { title: 'Twitter.js', tweets: [tweet], showForm: true });
+		});
 	});
 
 	router.post('/tweets', function(request, response) {
