@@ -25,18 +25,17 @@ module.exports = function (io) {
 	});
 
 	router.get('/users/:name', function(request, response) {
-		// var name = request.params.name;
-		// User.findOne(name).then(function (user) {
-  //   		return user.getTweets();
-		// })
-		// .then(function (tweets) {
-  //   		response.render('index', JSON.stringify(tweets)); // another way of just logging the plain old values
-		// });
 		var name = request.params.name;
-		var list = tweetBank.find( {name: name} );
-		response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
+		db.User.findOne({name:name}).then(function (user) {
+    		return user.getTweets();
+		})
+		.then(function (tweets) {
+    		response.render('index', { title: 'Twitter.js', tweets: tweets, showForm: true }); // another way of just logging the plain old values
+		});
+		// var name = request.params.name;
+		// var list = tweetBank.find( {name: name} );
+		// response.render('index', { title: 'Twitter.js - Posts by '+name, tweets: list, name: name, showForm: true } );
 	});
-
 
 
 	router.get('/tweets/:id', function(request, response) {
